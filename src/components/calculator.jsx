@@ -14,16 +14,27 @@ export function Calculator({ defaultA, defaultB, defaultOperator }) {
     OPERATORS.includes(defaultOperator) ? defaultOperator : "+"
   );
 
+  function divideSafely(a, b) {
+    try {
+      return divide(a, b);
+    } catch (err) {
+      return err.message;
+    }
+  }
+
   function getResult() {
+    const valueA = inputValueA || 0;
+    const valueB = inputValueB || 0;
+
     switch (operator) {
       case "+":
-        return sum(inputValueA, inputValueB);
+        return sum(valueA, valueB);
       case "-":
-        return substract(inputValueA, inputValueB);
+        return substract(valueA, valueB);
       case "x":
-        return multiply(inputValueA, inputValueB);
+        return multiply(valueA, valueB);
       case "/":
-        return divide(inputValueA, inputValueB);
+        return divideSafely(valueA, valueB);
       default:
         return "No operator provided";
     }
@@ -34,7 +45,7 @@ export function Calculator({ defaultA, defaultB, defaultOperator }) {
       <input
         type="number"
         value={value}
-        onChange={(e) => onChange(Number.parseFloat(e.target.value))}
+        onChange={(e) => onChange(e.target.value ? Number.parseFloat(e.target.value) : "")}
       />
     );
   };
@@ -56,7 +67,7 @@ export function Calculator({ defaultA, defaultB, defaultOperator }) {
       </div>
     );
   };
-  console.log(inputValueA);
+
   return (
     <>
       <h1 style={{ marginBottom: 40 }}>Calculator</h1>
