@@ -25,13 +25,13 @@ describe("<Calculator />", () => {
   });
 
   it("uses correctly the default values", () => {
-    render(<Calculator defaultA={5} defaultB={4} defaultOperator={"x"} />);
+    render(<Calculator defaultA={5} defaultB={4} defaultOperator={"-"} />);
     const { getValueA, getValueB, getOperator, getResult } = getCalculator();
 
     expect(getValueA()).toBe("5");
     expect(getValueB()).toBe("4");
-    expect(getOperator()).toBe("x");
-    expect(getResult()).toBe("20");
+    expect(getOperator()).toBe("-");
+    expect(getResult()).toBe("1");
   });
 
   it("calculates correctly when the user updates an input", () => {
@@ -42,11 +42,21 @@ describe("<Calculator />", () => {
     expect(getCalculator().getResult()).toBe("-144");
     fireEvent.change(screen.getByTestId("operator"), { target: { value: "+" } });
     expect(getCalculator().getResult()).toBe("0");
+    fireEvent.change(screen.getByTestId("operator"), { target: { value: "+" } });
+    expect(getCalculator().getResult()).toBe("0");
   });
 
   it("calculates correctly when the user updates an input", () => {
     render(<Calculator defaultA={12} defaultB={0} defaultOperator={"/"} />);
     expect(getCalculator().getResult()).toBe("You can't divide by 0");
+    fireEvent.change(screen.getByTestId("inputB"), { target: { value: "" } });
+    expect(getCalculator().getResult()).toBe("You can't divide by 0");
+  });
+
+  it("display a message when no operator is provided", () => {
+    render(<Calculator defaultA={1} defaultB={1} defaultOperator={"-"} />);
+    fireEvent.change(screen.getByTestId("operator"), { target: { value: "" } });
+    expect(getCalculator().getResult()).toBe("No operator provided");
   });
 });
 
